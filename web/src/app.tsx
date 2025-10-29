@@ -1,3 +1,8 @@
 export function App() {
-  return <div>Hello Word</div>;
+  return (
+    <div>
+      Hello
+      Word
+    </div>
+  )
 }

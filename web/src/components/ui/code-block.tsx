@@ -1,39 +1,68 @@
-import { useEffect, useState, type ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
+import {
+  useEffect,
+  useState,
+  type ComponentProps,
+} from 'react'
+import { twMerge } from 'tailwind-merge'
 
-import { codeToHtml } from "shiki";
+import { codeToHtml } from 'shiki'
 
-interface CodeBlockProps extends ComponentProps<"div"> {
-  code: string;
-  language?: string;
+interface CodeBlockProps
+  extends ComponentProps<'div'> {
+  code: string
+  language?: string
 }
 
 export function CodeBlock({
   className,
   code,
-  language = "json",
+  language = 'json',
   ...props
 }: CodeBlockProps) {
-  const [parsedCode, setParsedCode] = useState("");
+  const [
+    parsedCode,
+    setParsedCode,
+  ] =
+    useState(
+      '',
+    )
 
   useEffect(() => {
-    codeToHtml(code, { lang: language, theme: "vesper" }).then((parsed) =>
-      setParsedCode(parsed)
-    );
-  }, [code, language]);
+    codeToHtml(
+      code,
+      {
+        lang: language,
+        theme:
+          'vesper',
+      },
+    ).then(
+      (
+        parsed,
+      ) =>
+        setParsedCode(
+          parsed,
+        ),
+    )
+  }, [
+    code,
+    language,
+  ])
 
   return (
     <div
       className={twMerge(
-        "relative rounded-lg border border-zinc-700 overflow-x-auto",
-        className
+        'relative rounded-lg border border-zinc-700 overflow-x-auto',
+        className,
       )}
       {...props}
     >
       <div
         className="[&_pre]:p-4 [&_pre]:text-sm [&_pre]:font-mono [&_pre]:leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: parsedCode }}
+        dangerouslySetInnerHTML={{
+          __html:
+            parsedCode,
+        }}
       />
     </div>
-  );
+  )
 }

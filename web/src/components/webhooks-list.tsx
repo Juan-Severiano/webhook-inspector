@@ -1,4 +1,4 @@
-import { WebhooksListItem } from "./webhooks-list-item";
+import { WebhooksListItem } from './webhooks-list-item'
 
 export function WebhooksList() {
   return (
@@ -13,5 +13,5 @@ export function WebhooksList() {
         <WebhooksListItem />
       </div>
     </div>
-  );
+  )
 }
