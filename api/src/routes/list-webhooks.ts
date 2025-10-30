@@ -1,18 +1,18 @@
-import { db } from "@/db";
-import { webhooks } from "@/db/schema";
-import { desc, lt } from "drizzle-orm";
-import { createSelectSchema } from "drizzle-zod";
-import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import { db } from '@/db'
+import { webhooks } from '@/db/schema'
+import { desc, lt } from 'drizzle-orm'
+import { createSelectSchema } from 'drizzle-zod'
+import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 
-import { z } from "zod";
+import { z } from 'zod'
 
 export const listWebhooks: FastifyPluginAsyncZod = async (app) => {
   app.get(
-    "/api/webhooks",
+    '/api/webhooks',
     {
       schema: {
-        summary: "List webhooks",
-        tags: ["Webhooks"],
+        summary: 'List webhooks',
+        tags: ['Webhooks'],
         querystring: z.object({
           limit: z.coerce.number().min(1).max(100).default(20),
           cursor: z.coerce.number().min(1).max(100).default(20),
@@ -25,7 +25,7 @@ export const listWebhooks: FastifyPluginAsyncZod = async (app) => {
                 method: true,
                 pathname: true,
                 createdAt: true,
-              })
+              }),
             ),
             nextCursor: z.string().nullable(),
           }),
@@ -33,7 +33,7 @@ export const listWebhooks: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request, reply) => {
-      const { limit, cursor } = request.query;
+      const { limit, cursor } = request.query
 
       const result = await db
         .select({
@@ -45,17 +45,17 @@ export const listWebhooks: FastifyPluginAsyncZod = async (app) => {
         .from(webhooks)
         .where(cursor ? lt(webhooks.id, cursor) : undefined)
         .orderBy(desc(webhooks.id))
-        .limit(limit + 1);
+        .limit(limit + 1)
 
-      const hasMoreRegisters = result.length > limit;
-      const items = hasMoreRegisters ? result.slice(0, limit) : result;
+      const hasMoreRegisters = result.length > limit
+      const items = hasMoreRegisters ? result.slice(0, limit) : result
 
-      const nextCursor = hasMoreRegisters ? items[items.length - 1].id : null;
+      const nextCursor = hasMoreRegisters ? items[items.length - 1].id : null
 
       return reply.status(200).send({
         webhooks: items,
         nextCursor,
-      });
-    }
-  );
-};
+      })
+    },
+  )
+}

@@ -18,15 +18,18 @@ export const deleteWebhook: FastifyPluginAsyncZod = async (app) => {
         response: {
           200: z.void(),
           404: z.object({
-            message: z.string()
-          })
+            message: z.string(),
+          }),
         },
       },
     },
     async (request, reply) => {
       const { id } = request.params
 
-      const result = await db.delete(webhooks).where(eq(webhooks.id, id)).returning();
+      const result = await db
+        .delete(webhooks)
+        .where(eq(webhooks.id, id))
+        .returning()
 
       if (result.length === 0) {
         return reply.status(404).send({ message: 'Webhook not found.' })
